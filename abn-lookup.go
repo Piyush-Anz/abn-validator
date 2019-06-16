@@ -85,7 +85,7 @@ type AliveResponse struct {
 // TestFormRequest holds the startup config used to bootstrap all other config.
 type TestFormRequest struct {
 	FirstName string `json:"firstName,omitempty"`
-	LastName  string `json:"lastyName,omitempty"`
+	LastName  string `json:"lastName,omitempty"`
 	ABN       string `json:"abn,omitempty"`
 }
 
@@ -215,8 +215,13 @@ func formHandler(w http.ResponseWriter, req *http.Request) {
 
 		abnResp, err := getAbnFromAusGov(jsonReq.ABN)
 
-		resp.ValidFirstName = true
-		resp.ValidLastName = true
+		// Mock validation of names.
+		if jsonReq.FirstName != "" {
+			resp.ValidFirstName = true
+		}
+		if jsonReq.LastName != "" {
+			resp.ValidLastName = true
+		}
 
 		if err == nil {
 			if abnResp.AbnStatus == "Active" {
