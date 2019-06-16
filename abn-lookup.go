@@ -132,6 +132,8 @@ func abnLookupHandler(w http.ResponseWriter, req *http.Request) {
 		jsonResponse.Message = "\nERROR: Aus Gov ABN service returned: \"" + err.Error() + "\""
 	}
 
+	w.Header().Set("Content-Type", "application/json")
+
 	// Build the response.
 	json.NewEncoder(w).Encode(jsonResponse)
 }
@@ -189,6 +191,8 @@ func alivezHandler(w http.ResponseWriter, req *http.Request) {
 
 	var alivezResponse AliveResponse
 	alivezResponse.Alive = true
+
+	w.Header().Set("Content-Type", "application/json")
 
 	// Build the response.
 	json.NewEncoder(w).Encode(alivezResponse)
