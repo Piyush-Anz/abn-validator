@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/bryonbaker/utils"
 
@@ -135,9 +136,19 @@ func getAbnFromAusGov(abn string) (AbnLookupResponse, error) {
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "\nERROR: ioutil.ReadAll() returned: "+err.Error())
 	} else {
-		fmt.Fprintf(os.Stdout, "\nINFO: POST response:\n")
 		s := string(body)
+
+		// Strip out the JSON from the response
+		s = strings.TrimPrefix(s, applicationConfig.CallbackFunction+"(")
+		s = strings.TrimSuffix(s, ")")
+
+		fmt.Fprintf(os.Stdout, "\nINFO: POST response:\n")
 		fmt.Fprintln(os.Stdout, s)
+
+		err := json.Unmarshal([]byte(s), &abnDetails)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "\nERROR: Cannot unmarshal JSON into ABN Details. "+err.Error())
+		}
 	}
 
 	return abnDetails, err
