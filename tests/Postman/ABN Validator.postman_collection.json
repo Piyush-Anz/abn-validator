@@ -11,12 +11,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:10000/alivez",
+					"raw": "http://localhost:80/alivez",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "10000",
+					"port": "80",
 					"path": [
 						"alivez"
 					]
@@ -30,12 +30,12 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:10000/alivez",
+					"raw": "http://localhost:80/alivez",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "10000",
+					"port": "80",
 					"path": [
 						"alivez"
 					]
@@ -60,12 +60,12 @@
 					"raw": "{\"Abn\":\"35090438485\"}\n"
 				},
 				"url": {
-					"raw": "http://localhost:10000/abnlookup",
+					"raw": "http://localhost:80/abnlookup",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "10000",
+					"port": "80",
 					"path": [
 						"abnlookup"
 					]
@@ -90,12 +90,12 @@
 					"raw": "{\"Abn\":\"68107866151\"}\n"
 				},
 				"url": {
-					"raw": "http://localhost:10000/abnlookup",
+					"raw": "http://localhost:80/abnlookup",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "10000",
+					"port": "80",
 					"path": [
 						"abnlookup"
 					]
@@ -120,12 +120,12 @@
 					"raw": "{\"Abn\":\"681x07866151\"}\n"
 				},
 				"url": {
-					"raw": "http://localhost:10000/abnlookup",
+					"raw": "http://localhost:80/abnlookup",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "10000",
+					"port": "80",
 					"path": [
 						"abnlookup"
 					]

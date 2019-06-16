@@ -49,7 +49,8 @@ type ABNSvcRequest struct {
 // ABNSvcResponse defines the format of the HTML json response.
 type ABNSvcResponse struct {
 	AbnStatus string `json:"AbnStatus,omitempty"`
-	Message   string `json:"Message,omitempty"`
+	// EntityName string `json:"EntityName,omitempty"`
+	Message string `json:"Message,omitempty"`
 }
 
 // ####################################
@@ -100,7 +101,13 @@ func abnLookupHandler(w http.ResponseWriter, req *http.Request) {
 	var jsonResponse ABNSvcResponse
 	if err == nil {
 		jsonResponse.AbnStatus = abnDetails.AbnStatus
-		jsonResponse.Message = abnDetails.Message
+		// jsonResponse.EntityName = abnDetails.EntityName
+		if abnDetails.Message == "" {
+			jsonResponse.Message = abnDetails.EntityName
+		} else {
+			jsonResponse.Message = abnDetails.Message
+		}
+
 	} else {
 		jsonResponse.AbnStatus = ""
 		jsonResponse.Message = "\nERROR: Aus Gov ABN service returned: \"" + err.Error() + "\""
