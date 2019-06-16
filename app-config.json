@@ -1,6 +1,6 @@
 {
-   "Version": "0.4",
-   "AusGovGUID" : "b9154ed0-a521-451d-8a89-012908f0df34",
+   "Version": "0.5",
+   "UniqueID" : "YjkxNTRlZDAtYTUyMS00NTFkLThhODktMDEyOTA4ZjBkZjM0",
    "AusGovURL" : "http://abr.business.gov.au/json/AbnDetails.aspx",
    "ListeningPort" : "10000",
    "CallbackFunction" : "callback"

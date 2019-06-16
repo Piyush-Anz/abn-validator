@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -29,7 +30,7 @@ const (
 type ApplicationConfig struct {
 	Version          string `json:"Version,omitempty"`
 	ListeningPort    string `json:"ListeningPort,omitempty"`
-	AusGovGUID       string `json:"AusGovGUID,omitempty"`
+	AusGovGUID       string `json:"UniqueID,omitempty"`
 	AusGovURL        string `json:"AusGovURL,omitempty"`
 	CallbackFunction string `json:"CallbackFunction,omitempty"`
 }
@@ -271,6 +272,9 @@ func initialise() ApplicationConfig {
 	}
 
 	utils.Must(json.Unmarshal(byteVal, &appConfig))
+
+	sDec, _ := base64.StdEncoding.DecodeString(appConfig.AusGovGUID)
+	appConfig.AusGovGUID = string(sDec)
 
 	return appConfig
 }

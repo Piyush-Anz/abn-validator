@@ -20,13 +20,7 @@
 # MACOS files
 .DS_Store
 
-<<<<<<< HEAD
 launch.json
 microservice
-=======
-# Visual Studio
-.vs/
-bin/
-obj/
->>>>>>> snappyBrowser
 abn-lookup
+guid.txt
