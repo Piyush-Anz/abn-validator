@@ -124,17 +124,20 @@ func getAbnFromAusGov(abn string) (AbnLookupResponse, error) {
 	requestBody, err := json.Marshal(jsonParms)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "\nERROR: getAbnFromAusGov(): Cannot Marshal empty map: "+err.Error())
+		abnDetails.Message = "ERROR: ABN Lookup service error. Consult logs."
 	}
 
 	response, err := http.Post(fullURL, "application/json", bytes.NewBuffer(requestBody))
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "\nERROR: http.PostForm() returned: "+err.Error())
+		abnDetails.Message = "ERROR: ABN Lookup service error. Consult logs."
 	}
 
 	defer response.Body.Close()
 	body, err := ioutil.ReadAll(response.Body)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "\nERROR: ioutil.ReadAll() returned: "+err.Error())
+		abnDetails.Message = "ERROR: ABN Lookup service error. Consult logs."
 	} else {
 		s := string(body)
 
