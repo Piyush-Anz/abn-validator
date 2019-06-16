@@ -228,6 +228,7 @@ func formHandler(w http.ResponseWriter, req *http.Request) {
 			resp.Message = abnResp.Message
 		}
 	}
+	w.Header().Set("Content-Type", "application/json")
 
 	// Build the response.
 	json.NewEncoder(w).Encode(resp)
