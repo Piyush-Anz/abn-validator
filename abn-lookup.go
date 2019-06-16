@@ -78,6 +78,25 @@ type AliveResponse struct {
 	Alive bool `json:"alive,omitempty"`
 }
 
+// ###########################################
+// ### Messages for testing the browser UI ###
+// ###########################################
+
+// TestFormRequest holds the startup config used to bootstrap all other config.
+type TestFormRequest struct {
+	FirstName string `json:"firstName,omitempty"`
+	LastName  string `json:"lastyName,omitempty"`
+	ABN       string `json:"abn,omitempty"`
+}
+
+// TestFormResponse holds the startup config used to bootstrap all other config.
+type TestFormResponse struct {
+	ValidFirstName bool   `json:"validFirstName,omitempty"`
+	ValidLastName  bool   `json:"validLastName,omitempty"`
+	AbnStatus      bool   `json:"abnStatus,omitempty"`
+	Message        string `json:"message,omitempty"`
+}
+
 // HomeHandler is the simple request handler that takes no onput parameters.
 func homeHandler(w http.ResponseWriter, req *http.Request) {
 	fmt.Println("HomeHandler()")
@@ -175,6 +194,45 @@ func alivezHandler(w http.ResponseWriter, req *http.Request) {
 	json.NewEncoder(w).Encode(alivezResponse)
 }
 
+// formHandler is a debug route for the browser form
+func formHandler(w http.ResponseWriter, req *http.Request) {
+	fmt.Println("Form test...")
+
+	var resp TestFormResponse
+
+	var jsonReq TestFormRequest
+	decoder := json.NewDecoder(req.Body)
+	err := decoder.Decode(&jsonReq)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "ERROR: Cannot decode request JSON. Error: ", err.Error())
+		resp.Message = "ERROR"
+	} else {
+		fmt.Println("INFO: First name: ", jsonReq.FirstName)
+
+		abnResp, err := getAbnFromAusGov(jsonReq.ABN)
+
+		resp.ValidFirstName = true
+		resp.ValidLastName = true
+
+		if err == nil {
+			if abnResp.AbnStatus == "Active" {
+				resp.AbnStatus = true
+			} else {
+				resp.AbnStatus = false
+			}
+		}
+
+		if abnResp.Message == "" {
+			resp.Message = abnResp.EntityName
+		} else {
+			resp.Message = abnResp.Message
+		}
+	}
+
+	// Build the response.
+	json.NewEncoder(w).Encode(resp)
+}
+
 // Initialise loads the boot configuration information.
 func initialise() ApplicationConfig {
 	fmt.Println("initialise()")
@@ -217,6 +275,7 @@ func main() {
 
 	// router.HandleFunc("/", homeHandler).Methods("GET", "POST", "OPTIONS")
 	router.HandleFunc("/abnlookup", abnLookupHandler).Methods("GET", "POST", "OPTIONS")
+	router.HandleFunc("/form", formHandler).Methods("GET", "POST", "OPTIONS")
 	router.HandleFunc("/alivez", alivezHandler).Methods("GET", "POST", "OPTIONS")
 
 	router.Use(corsMw)
