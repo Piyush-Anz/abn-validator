@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: abn-validator
+  namespace: default
+  labels:
+    # key/value needs to match the selector in the Service.
+    app: abn-validator
+spec:
+  containers:
+  - name: abn-validator
+    image: image-registry.openshift-image-registry.svc:5000/default/abn-validator
+    ports:
+    - containerPort: 10000
+    readinessProbe:
+      httpGet:
+        path: /alivez
+        port: 10000
+    resources:
+      limits:
+        cpu: 1
+        memory: "1Gi"
