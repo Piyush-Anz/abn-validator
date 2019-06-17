@@ -29,7 +29,7 @@ $(function () {
         let form = $(this);
         $.ajax({
             type: "post",
-            url: "http://abn-validator-default.apps.cluster-anz-f723.anz-f723.openshiftworkshop.com/form",
+            url: "http://dm-demo-default.apps.cluster-anz-f723.anz-f723.openshiftworkshop.com/form",
             contentType: "application/json",
             data: JSON.stringify(form.serializeFormJSON()),
             success: function (data) {
