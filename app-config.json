@@ -1,10 +1,10 @@
 {
-   "Version": "0.5",
+   "Version": "0.6",
    "UniqueID" : "YjkxNTRlZDAtYTUyMS00NTFkLThhODktMDEyOTA4ZjBkZjM0",
    "AusGovURL" : "http://abr.business.gov.au/json/AbnDetails.aspx",
    "RuleServerURL" : "http://52.64.43.20:8080/kie-server/services/rest/server/containers/instances/validationRules",
    "ListeningPort" : "10000",
    "CallbackFunction" : "callback",
-   "Username" : "bryon",
-   "Password" : "password"
+   "Username" : "dmadmin",
+   "Password" : "password1!"
 }

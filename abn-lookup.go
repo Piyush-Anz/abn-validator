@@ -8,7 +8,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"net/url"
 	"os"
 	"strings"
 
@@ -126,9 +125,9 @@ func abnLookupHandler(w http.ResponseWriter, req *http.Request) {
 	if err == nil {
 		jsonResponse.AbnStatus = abnDetails.AbnStatus
 		// jsonResponse.EntityName = abnDetails.EntityName
-		if abnDetails.Message == "" {
-			jsonResponse.Message = abnDetails.EntityName
-		} else {
+		if abnDetails.Message != "" {
+			// 	jsonResponse.Message = abnDetails.EntityName
+			// } else {
 			jsonResponse.Message = abnDetails.Message
 		}
 
@@ -141,38 +140,6 @@ func abnLookupHandler(w http.ResponseWriter, req *http.Request) {
 
 	// Build the response.
 	json.NewEncoder(w).Encode(jsonResponse)
-}
-
-// validateABN calls the ABN Validate Rules Engine.
-func validateABN(abn string) (AbnLookupResponse, error) {
-	var err error
-	var abnDetails AbnLookupResponse
-
-	client := &http.Client{}
-	v := url.Values{}
-	v.Set("name", applicationConfig.Username) // Remove this - just testing how the json works.
-	v.Set("password", applicationConfig.Password)
-
-	// This is a work around because I cannot get the http methods to add the query parameters to the url.
-	var URL = applicationConfig.AusGovURL + "?abn=" + abn +
-		"&callback=" + applicationConfig.CallbackFunction +
-		"&guid=" + applicationConfig.AusGovGUID
-
-	request, err := http.NewRequest("POST", URL, strings.NewReader(v.Encode()))
-	if err == nil {
-		request.SetBasicAuth(applicationConfig.Username, applicationConfig.Password)
-
-		response, err := client.Do(request)
-		if err == nil {
-			bodyText, err := ioutil.ReadAll(response.Body)
-			if err == nil {
-				s := string(bodyText)
-				fmt.Println("Response: %s", s)
-			}
-		}
-	}
-
-	return abnDetails, err
 }
 
 func getAbnFromAusGov(abn string) (AbnLookupResponse, error) {
@@ -249,20 +216,14 @@ func formHandler(w http.ResponseWriter, req *http.Request) {
 		resp.Message = "ERROR"
 	} else {
 		fmt.Println("INFO: First name: ", jsonReq.FirstName)
+		fmt.Println("INFO: Last name: ", jsonReq.LastName)
+		fmt.Println("INFO: ABN: ", jsonReq.ABN)
 
-		// Don't bother calling it if the ABN is not supplied.
-		if jsonReq.ABN != "" {
-			// validateABN(jsonReq.ABN)
+		rules := RuleInputs{firstName: jsonReq.FirstName, lastName: jsonReq.LastName, abn: jsonReq.ABN}
+		validateRules(rules)
 
-			// Validation of names.
-			if jsonReq.FirstName != "" {
-				resp.ValidFirstName = true
-			}
+		// TODO: Build the JSON response.
 
-			if jsonReq.LastName != "" {
-				resp.ValidLastName = true
-			}
-		}
 		w.Header().Set("Content-Type", "application/json")
 	}
 
