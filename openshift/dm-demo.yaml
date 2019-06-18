@@ -7,7 +7,7 @@ items:
     name: dm-demo
     namespace: default
   spec:
-    replicas: 5
+    replicas: 1
     selector:
       matchLabels: 
         app: dm-demo
@@ -26,6 +26,8 @@ items:
             httpGet:
               path: /alivez
               port: 10000
+            timeoutSeconds: 1
+            periodSeconds: 60
           ports: 
           - containerPort: 10000
           resources:
