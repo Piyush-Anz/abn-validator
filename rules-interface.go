@@ -63,17 +63,43 @@ type Commands struct {
 	Query        Query     `json:"query,omitempty"`
 }
 
-// validateABN calls the ABN Validate Rules Engine.
 func validateRules(ruleInputs RuleInputs) (RuleResults, error) {
-	var err error
 	var results RuleResults
-
+	var err error
 	ruleReq := buildRuleRequest(ruleInputs)
 	reqBody := []byte(ruleReq)
 
+	var URL string
+	if ruleInputs.abn != "" {
+		URL = applicationConfig.ABNRuleServerURL
+		results1, _ := callDecisionManager(URL, reqBody)
+		results.abnStatus = results1.abnStatus
+		results.message = results1.message
+	}
+	if ruleInputs.firstName != "" {
+		URL = applicationConfig.NameRuleServerURL
+		results2, _ := callDecisionManager(URL, reqBody)
+		results.validFirstName = results2.validFirstName
+		results.message = results.message + results2.message
+	}
+	if ruleInputs.lastName != "" {
+		URL = applicationConfig.NameRuleServerURL // REVISIT
+		results3, _ := callDecisionManager(URL, reqBody)
+		results.validLastName = results3.validLastName
+		results.message = results.message + results3.message
+	}
+
+	return results, err
+}
+
+// validateABN calls the ABN Validate Rules Engine.
+func callDecisionManager(URL string, reqBody []byte) (RuleResults, error) {
+	var err error
+	var results RuleResults
+
 	// Build the HTTP request.
 	client := &http.Client{}
-	URL := applicationConfig.RuleServerURL
+
 	//jsonStr, _x := json.Marshal(ruleReq)
 	req, err := http.NewRequest("POST", URL, bytes.NewBuffer(reqBody))
 	req.SetBasicAuth(applicationConfig.Username, applicationConfig.Password)

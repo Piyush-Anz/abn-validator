@@ -28,14 +28,15 @@ const (
 
 // ApplicationConfig holds the startup config used to bootstrap all other config.
 type ApplicationConfig struct {
-	Version          string `json:"Version,omitempty"`
-	ListeningPort    string `json:"ListeningPort,omitempty"`
-	AusGovGUID       string `json:"UniqueID,omitempty"`
-	AusGovURL        string `json:"AusGovURL,omitempty"`
-	RuleServerURL    string `json:"RuleServerURL,omitempty"`
-	CallbackFunction string `json:"CallbackFunction,omitempty"`
-	Username         string `json:"Username,omitempty"`
-	Password         string `json:"Password,omitempty"`
+	Version           string `json:"Version,omitempty"`
+	ListeningPort     string `json:"ListeningPort,omitempty"`
+	AusGovGUID        string `json:"UniqueID,omitempty"`
+	AusGovURL         string `json:"AusGovURL,omitempty"`
+	NameRuleServerURL string `json:"NameRuleServerURL,omitempty"`
+	ABNRuleServerURL  string `json:"ABNRuleServerURL,omitempty"`
+	CallbackFunction  string `json:"CallbackFunction,omitempty"`
+	Username          string `json:"Username,omitempty"`
+	Password          string `json:"Password,omitempty"`
 }
 
 // Holds the application's config
@@ -191,7 +192,7 @@ func getAbnFromAusGov(abn string) (AbnLookupResponse, error) {
 
 // aliveCheckHandler is a request that has an input parameter of the client ID.
 func alivezHandler(w http.ResponseWriter, req *http.Request) {
-	fmt.Println("Alive test...")
+	fmt.Println("Liveness probe...")
 
 	var alivezResponse AliveResponse
 	alivezResponse.Alive = true
