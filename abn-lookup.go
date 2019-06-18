@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"strings"
 
@@ -32,7 +33,10 @@ type ApplicationConfig struct {
 	ListeningPort    string `json:"ListeningPort,omitempty"`
 	AusGovGUID       string `json:"UniqueID,omitempty"`
 	AusGovURL        string `json:"AusGovURL,omitempty"`
+	RuleServerURL    string `json:"RuleServerURL,omitempty"`
 	CallbackFunction string `json:"CallbackFunction,omitempty"`
+	Username         string `json:"Username,omitempty"`
+	Password         string `json:"Password,omitempty"`
 }
 
 // Holds the application's config
@@ -139,6 +143,38 @@ func abnLookupHandler(w http.ResponseWriter, req *http.Request) {
 	json.NewEncoder(w).Encode(jsonResponse)
 }
 
+// validateABN calls the ABN Validate Rules Engine.
+func validateABN(abn string) (AbnLookupResponse, error) {
+	var err error
+	var abnDetails AbnLookupResponse
+
+	client := &http.Client{}
+	v := url.Values{}
+	v.Set("name", applicationConfig.Username) // Remove this - just testing how the json works.
+	v.Set("password", applicationConfig.Password)
+
+	// This is a work around because I cannot get the http methods to add the query parameters to the url.
+	var URL = applicationConfig.AusGovURL + "?abn=" + abn +
+		"&callback=" + applicationConfig.CallbackFunction +
+		"&guid=" + applicationConfig.AusGovGUID
+
+	request, err := http.NewRequest("POST", URL, strings.NewReader(v.Encode()))
+	if err == nil {
+		request.SetBasicAuth(applicationConfig.Username, applicationConfig.Password)
+
+		response, err := client.Do(request)
+		if err == nil {
+			bodyText, err := ioutil.ReadAll(response.Body)
+			if err == nil {
+				s := string(bodyText)
+				fmt.Println("Response: %s", s)
+			}
+		}
+	}
+
+	return abnDetails, err
+}
+
 func getAbnFromAusGov(abn string) (AbnLookupResponse, error) {
 	var err error
 	var abnDetails AbnLookupResponse
@@ -201,7 +237,42 @@ func alivezHandler(w http.ResponseWriter, req *http.Request) {
 
 // formHandler is a debug route for the browser form
 func formHandler(w http.ResponseWriter, req *http.Request) {
-	fmt.Println("Form test...")
+	fmt.Println("formHandler()")
+
+	var resp TestFormResponse
+
+	var jsonReq TestFormRequest
+	decoder := json.NewDecoder(req.Body)
+	err := decoder.Decode(&jsonReq)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "ERROR: Cannot decode request JSON. Error: ", err.Error())
+		resp.Message = "ERROR"
+	} else {
+		fmt.Println("INFO: First name: ", jsonReq.FirstName)
+
+		// Don't bother calling it if the ABN is not supplied.
+		if jsonReq.ABN != "" {
+			// validateABN(jsonReq.ABN)
+
+			// Validation of names.
+			if jsonReq.FirstName != "" {
+				resp.ValidFirstName = true
+			}
+
+			if jsonReq.LastName != "" {
+				resp.ValidLastName = true
+			}
+		}
+		w.Header().Set("Content-Type", "application/json")
+	}
+
+	// Build the response.
+	json.NewEncoder(w).Encode(resp)
+}
+
+// formTestHandler is a debug route for the browser form
+func formTestHandler(w http.ResponseWriter, req *http.Request) {
+	fmt.Println("formTestHandler()")
 
 	var resp TestFormResponse
 
@@ -293,6 +364,7 @@ func main() {
 	// router.HandleFunc("/", homeHandler).Methods("GET", "POST", "OPTIONS")
 	router.HandleFunc("/abnlookup", abnLookupHandler).Methods("GET", "POST", "OPTIONS")
 	router.HandleFunc("/form", formHandler).Methods("GET", "POST", "OPTIONS")
+	router.HandleFunc("/form/test", formTestHandler).Methods("GET", "POST", "OPTIONS")
 	router.HandleFunc("/alivez", alivezHandler).Methods("GET", "POST", "OPTIONS")
 
 	router.Use(corsMw)
