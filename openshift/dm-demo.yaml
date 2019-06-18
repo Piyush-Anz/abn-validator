@@ -8,7 +8,7 @@ items:
     namespace: default
   spec:
     replicas: 5
-    selector:     # Not sure if I need this
+    selector:
       matchLabels: 
         app: dm-demo
     strategy:

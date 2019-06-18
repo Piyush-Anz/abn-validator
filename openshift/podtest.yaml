@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: somepod
+  namespace: default
+spec:
+  containers:
+  - name: web
+    image: registry.redhat.io/rhel7
+  imagePullSecrets:
+  - name: 7271256-bryonbaker-pull-secret

@@ -214,28 +214,31 @@ func formHandler(w http.ResponseWriter, req *http.Request) {
 	} else {
 		fmt.Println("INFO: First name: ", jsonReq.FirstName)
 
-		abnResp, err := getAbnFromAusGov(jsonReq.ABN)
+		// Don't bother calling it if the ABN is not supplied.
+		if jsonReq.ABN != "" {
+			abnResp, err := getAbnFromAusGov(jsonReq.ABN)
+			if err == nil {
+				if abnResp.AbnStatus == "Active" {
+					resp.AbnStatus = true
+				} else {
+					resp.AbnStatus = false
+				}
+			}
 
-		// Mock validation of names.
-		if jsonReq.FirstName != "" {
-			resp.ValidFirstName = true
-		}
-		if jsonReq.LastName != "" {
-			resp.ValidLastName = true
-		}
-
-		if err == nil {
-			if abnResp.AbnStatus == "Active" {
-				resp.AbnStatus = true
+			if abnResp.Message == "" {
+				resp.Message = abnResp.EntityName
 			} else {
-				resp.AbnStatus = false
+				resp.Message = abnResp.Message
 			}
 		}
 
-		if abnResp.Message == "" {
-			resp.Message = abnResp.EntityName
-		} else {
-			resp.Message = abnResp.Message
+		// Validation of names.
+		if jsonReq.FirstName != "" {
+			resp.ValidFirstName = true
+		}
+
+		if jsonReq.LastName != "" {
+			resp.ValidLastName = true
 		}
 	}
 	w.Header().Set("Content-Type", "application/json")
