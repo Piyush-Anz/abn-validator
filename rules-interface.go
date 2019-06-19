@@ -83,8 +83,8 @@ func callDecisionManager(URL string, reqBody []byte) (bool, error) {
 		log.Fatal(err)
 	}
 	bodyText, err := ioutil.ReadAll(resp.Body)
-	s := string(bodyText)
-	fmt.Println("INFO: Request Message:\n", s)
+	// s := string(bodyText)
+	// fmt.Println("INFO: Request Message:\n", s)
 
 	var result map[string]interface{}
 	err = json.Unmarshal(bodyText, &result)
@@ -198,7 +198,7 @@ func buildRuleRequest(ruleInputs RuleInputs) string {
 	// BIGGEST HACK EVER!
 	s := string(jsonReq)
 	s = strings.Replace(s, "*****", query, 1)
-	fmt.Fprintln(os.Stdout, "INFO: Rules query: \n", s)
+	// fmt.Fprintln(os.Stdout, "INFO: Rules query: \n", s)
 
 	return s
 }

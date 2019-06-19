@@ -1,5 +1,5 @@
 {
-   "Version": "0.7",
+   "Version": "0.8",
    "UniqueID" : "YjkxNTRlZDAtYTUyMS00NTFkLThhODktMDEyOTA4ZjBkZjM0",
    "AusGovURL" : "http://abr.business.gov.au/json/AbnDetails.aspx",
    "NameRuleServerURL" : "http://52.64.43.20:8080/kie-server/services/rest/server/containers/instances/validationRulesName",

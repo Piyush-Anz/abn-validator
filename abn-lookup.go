@@ -97,10 +97,10 @@ type TestFormRequest struct {
 
 // TestFormResponse holds the startup config used to bootstrap all other config.
 type TestFormResponse struct {
-	ValidFirstName bool   `json:"validFirstName,omitempty"`
-	ValidLastName  bool   `json:"validLastName,omitempty"`
-	AbnStatus      bool   `json:"abnStatus,omitempty"`
-	Message        string `json:"message,omitempty"`
+	ValidFirstName bool   `json:"validFirstName"`
+	ValidLastName  bool   `json:"validLastName"`
+	AbnStatus      bool   `json:"abnStatus"`
+	Message        string `json:"message"`
 }
 
 // HomeHandler is the simple request handler that takes no onput parameters.
@@ -222,9 +222,12 @@ func formHandler(w http.ResponseWriter, req *http.Request) {
 		fmt.Println("INFO: ABN: ", jsonReq.ABN)
 
 		rules := RuleInputs{firstName: jsonReq.FirstName, lastName: jsonReq.LastName, abn: jsonReq.ABN}
-		validateRules(rules)
+		ruleResults, _ := validateRules(rules)
 
-		// TODO: Build the JSON response.
+		resp.ValidFirstName = ruleResults.validFirstName
+		resp.ValidLastName = ruleResults.validLastName
+		resp.AbnStatus = ruleResults.abnStatus
+		resp.Message = "Test message response." //ruleResults.message
 
 		w.Header().Set("Content-Type", "application/json")
 	}
