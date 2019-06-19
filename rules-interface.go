@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -24,44 +25,14 @@ type RuleResults struct {
 	message        string
 }
 
-// #####################################################################
+type DMResult struct {
+	result  bool
+	message string
+}
 
-type RuleRequest struct {
-	Lookup   string     `json:"lookup,omitempty"`
-	Commands []Commands `json:"commands,omitempty"`
-}
-type ComRedhatDemoAbnclientClient struct {
-}
-type ClientObject struct {
-	ComRedhatDemoAbnclientClient ComRedhatDemoAbnclientClient `json:"com.redhat.demo.abnclient.Client,omitempty"`
-}
-type SetGlobal struct {
-	Identifier string       `json:"identifier,omitempty"`
-	Object     ClientObject `json:"object,omitempty"`
-}
-type ComMyspaceDatavalidationEntity struct {
-	Name     string `json:"name,omitempty"`
-	LastName string `json:"lastname,omitempty"`
-	Abn      string `json:"abn,omitempty"`
-}
-type EntityObject struct {
-	ComMyspaceDatavalidationEntity ComMyspaceDatavalidationEntity `json:"com.myspace.datavalidation.Entity,omitempty"`
-}
-type Insert struct {
-	OutIdentifier string       `json:"out-identifier,omitempty"`
-	ReturnObject  string       `json:"return-object,omitempty"`
-	Object        EntityObject `json:"object,omitempty"`
-}
-type Query struct {
-	OutIdentifier string `json:"out-identifier,omitempty"`
-	Name          string `json:"name,omitempty,omitempty"`
-}
-type Commands struct {
-	SetGlobal    SetGlobal `json:"set-global,omitempty"`
-	Insert       Insert    `json:"insert,omitempty"`
-	FireAllRules string    `json:"fire-all-rules,omitempty"`
-	Query        Query     `json:"query,omitempty"`
-}
+var errorList map[string]string
+
+// #####################################################################
 
 func validateRules(ruleInputs RuleInputs) (RuleResults, error) {
 	var results RuleResults
@@ -69,33 +40,34 @@ func validateRules(ruleInputs RuleInputs) (RuleResults, error) {
 	ruleReq := buildRuleRequest(ruleInputs)
 	reqBody := []byte(ruleReq)
 
+	m := make(map[string]string)
+	errorList = m
+
 	var URL string
 	if ruleInputs.abn != "" {
 		URL = applicationConfig.ABNRuleServerURL
-		results1, _ := callDecisionManager(URL, reqBody)
-		results.abnStatus = results1.abnStatus
-		results.message = results1.message
+		ruleOkay, _ := callDecisionManager(URL, reqBody)
+		results.abnStatus = ruleOkay
 	}
 	if ruleInputs.firstName != "" {
 		URL = applicationConfig.NameRuleServerURL
-		results2, _ := callDecisionManager(URL, reqBody)
-		results.validFirstName = results2.validFirstName
-		results.message = results.message + results2.message
+		ruleOkay, _ := callDecisionManager(URL, reqBody)
+		results.validFirstName = ruleOkay
 	}
 	if ruleInputs.lastName != "" {
-		URL = applicationConfig.NameRuleServerURL // REVISIT
-		results3, _ := callDecisionManager(URL, reqBody)
-		results.validLastName = results3.validLastName
-		results.message = results.message + results3.message
+		URL = applicationConfig.LNameRuleServerURL
+		ruleOkay, _ := callDecisionManager(URL, reqBody)
+		results.validLastName = ruleOkay
 	}
 
 	return results, err
 }
 
-// validateABN calls the ABN Validate Rules Engine.
-func callDecisionManager(URL string, reqBody []byte) (RuleResults, error) {
+// validateABN calls the ABN Validate Rules Engine. Returns true if rule was okay
+func callDecisionManager(URL string, reqBody []byte) (bool, error) {
 	var err error
-	var results RuleResults
+	// var results RuleResults
+	var ruleOkay bool
 
 	// Build the HTTP request.
 	client := &http.Client{}
@@ -112,9 +84,62 @@ func callDecisionManager(URL string, reqBody []byte) (RuleResults, error) {
 	}
 	bodyText, err := ioutil.ReadAll(resp.Body)
 	s := string(bodyText)
-	println(s)
+	fmt.Println("INFO: Request Message:\n", s)
 
-	return results, err
+	var result map[string]interface{}
+	err = json.Unmarshal(bodyText, &result)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "ERROR: Cannot unmarshall DM response.")
+	}
+
+	l := len(errorList)
+	parseMap(result)
+	if l == len(errorList) {
+		ruleOkay = true // No rule violations
+	} else {
+		ruleOkay = false // Rule violations
+	}
+
+	return ruleOkay, err
+}
+
+func parseMap(aMap map[string]interface{}) {
+	for key, val := range aMap {
+		switch concreteVal := val.(type) {
+		case map[string]interface{}:
+			// fmt.Println(key)
+			parseMap(val.(map[string]interface{}))
+		case []interface{}:
+			// fmt.Println(key)
+			parseArray(val.([]interface{}))
+		default:
+			//fmt.Print("M> ")
+			//fmt.Println(key, ":", concreteVal)
+			if key == "cause" {
+				// fmt.Println("VALIDATION ERROR: ", concreteVal)
+				msg := fmt.Sprintf("%s", concreteVal)
+				errorList[msg] = "error"
+			}
+		}
+	}
+}
+
+func parseArray(anArray []interface{}) {
+	for _, val := range anArray {
+		switch val.(type) {
+		case map[string]interface{}:
+			// fmt.Println("Index:", i)
+			parseMap(val.(map[string]interface{}))
+		case []interface{}:
+			// fmt.Println("Index:", i)
+			parseArray(val.([]interface{}))
+		default:
+			// Do nothing
+			// fmt.Print("A> ")
+			//fmt.Println("Index", i, ":", concreteVal)
+
+		}
+	}
 }
 
 // buildRuleRequest
@@ -132,8 +157,6 @@ func buildRuleRequest(ruleInputs RuleInputs) string {
 		  },
 		  {
 			"insert": {
-			  "out-identifier": "entity",
-			  "return-object": "true",
 			  "object": {
 				"com.myspace.datavalidation.Entity": {
 					*****
@@ -146,7 +169,7 @@ func buildRuleRequest(ruleInputs RuleInputs) string {
 		  },
 		  {
 			"query": {
-			  "out-identifier": "error",
+			  "out-identifier": "error-results",
 			  "name": "get_validation_error"
 			}
 		  }

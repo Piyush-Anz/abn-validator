@@ -28,15 +28,16 @@ const (
 
 // ApplicationConfig holds the startup config used to bootstrap all other config.
 type ApplicationConfig struct {
-	Version           string `json:"Version,omitempty"`
-	ListeningPort     string `json:"ListeningPort,omitempty"`
-	AusGovGUID        string `json:"UniqueID,omitempty"`
-	AusGovURL         string `json:"AusGovURL,omitempty"`
-	NameRuleServerURL string `json:"NameRuleServerURL,omitempty"`
-	ABNRuleServerURL  string `json:"ABNRuleServerURL,omitempty"`
-	CallbackFunction  string `json:"CallbackFunction,omitempty"`
-	Username          string `json:"Username,omitempty"`
-	Password          string `json:"Password,omitempty"`
+	Version            string `json:"Version,omitempty"`
+	ListeningPort      string `json:"ListeningPort,omitempty"`
+	AusGovGUID         string `json:"UniqueID,omitempty"`
+	AusGovURL          string `json:"AusGovURL,omitempty"`
+	NameRuleServerURL  string `json:"NameRuleServerURL,omitempty"`
+	LNameRuleServerURL string `json:"LNameRuleServerURL,omitempty"`
+	ABNRuleServerURL   string `json:"ABNRuleServerURL,omitempty"`
+	CallbackFunction   string `json:"CallbackFunction,omitempty"`
+	Username           string `json:"Username,omitempty"`
+	Password           string `json:"Password,omitempty"`
 }
 
 // Holds the application's config

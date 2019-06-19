@@ -3,6 +3,7 @@
    "UniqueID" : "YjkxNTRlZDAtYTUyMS00NTFkLThhODktMDEyOTA4ZjBkZjM0",
    "AusGovURL" : "http://abr.business.gov.au/json/AbnDetails.aspx",
    "NameRuleServerURL" : "http://52.64.43.20:8080/kie-server/services/rest/server/containers/instances/validationRulesName",
+   "LNameRuleServerURL" : "http://52.64.43.20:8080/kie-server/services/rest/server/containers/instances/validationRulesLName",
    "ABNRuleServerURL" : "http://52.64.43.20:8080/kie-server/services/rest/server/containers/instances/validationRulesABN",
    "ListeningPort" : "10000",
    "CallbackFunction" : "callback",
