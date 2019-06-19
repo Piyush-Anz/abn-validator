@@ -227,7 +227,7 @@ func formHandler(w http.ResponseWriter, req *http.Request) {
 		resp.ValidFirstName = ruleResults.validFirstName
 		resp.ValidLastName = ruleResults.validLastName
 		resp.AbnStatus = ruleResults.abnStatus
-		resp.Message = "Test message response." //ruleResults.message
+		resp.Message = ruleResults.message
 
 		w.Header().Set("Content-Type", "application/json")
 	}

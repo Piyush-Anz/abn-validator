@@ -14,7 +14,7 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go install abn-lookup
 # Runtime image
 FROM alpine:latest
 COPY --from=builder /go/bin/abn-lookup /bin/abn-lookup
-ARG VERSION=0.8
+ARG VERSION=0.8.1
 RUN echo $VERSION > /image_version
 EXPOSE 10000
 WORKDIR "/bin"

@@ -60,6 +60,11 @@ func validateRules(ruleInputs RuleInputs) (RuleResults, error) {
 		results.validLastName = ruleOkay
 	}
 
+	// Iterate over all the error messages.
+	for k, _ := range errorList {
+		results.message = results.message + k + "    "
+	}
+
 	return results, err
 }
 
