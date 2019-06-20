@@ -13,7 +13,7 @@ spec:
       annotations: null
       from:
         kind: DockerImage
-        name: 'bryonbaker/abn-validator:0.9'
+        name: 'bryonbaker/abn-validator:0.9.1'
       generation: 1
       importPolicy: {}
       referencePolicy:
