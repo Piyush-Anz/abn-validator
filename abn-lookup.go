@@ -90,9 +90,10 @@ type AliveResponse struct {
 
 // TestFormRequest holds the startup config used to bootstrap all other config.
 type TestFormRequest struct {
-	FirstName string `json:"firstName,omitempty"`
-	LastName  string `json:"lastName,omitempty"`
-	ABN       string `json:"abn,omitempty"`
+	FirstName      string `json:"firstName,omitempty"`
+	LastName       string `json:"lastName,omitempty"`
+	ABN            string `json:"abn,omitempty"`
+	ServiceVersion string `json:"version,omitempty"`
 }
 
 // TestFormResponse holds the startup config used to bootstrap all other config.
@@ -220,9 +221,10 @@ func formHandler(w http.ResponseWriter, req *http.Request) {
 		fmt.Println("INFO: First name: ", jsonReq.FirstName)
 		fmt.Println("INFO: Last name: ", jsonReq.LastName)
 		fmt.Println("INFO: ABN: ", jsonReq.ABN)
+		fmt.Println("INFO: Service version: ", jsonReq.ServiceVersion)
 
 		rules := RuleInputs{firstName: jsonReq.FirstName, lastName: jsonReq.LastName, abn: jsonReq.ABN}
-		ruleResults, _ := validateRules(rules)
+		ruleResults, _ := validateRules(jsonReq.ServiceVersion, rules)
 
 		resp.ValidFirstName = ruleResults.validFirstName
 		resp.ValidLastName = ruleResults.validLastName
