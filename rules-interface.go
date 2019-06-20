@@ -40,8 +40,6 @@ func validateRules(serviceVersion string, ruleInputs RuleInputs) (RuleResults, e
 	ruleReq := buildRuleRequest(ruleInputs)
 	reqBody := []byte(ruleReq)
 
-	serviceVersion = "_" + serviceVersion + "-SNAPSHOT"
-
 	m := make(map[string]string)
 	errorList = m
 
@@ -52,6 +50,9 @@ func validateRules(serviceVersion string, ruleInputs RuleInputs) (RuleResults, e
 		results.abnStatus = ruleOkay
 	}
 	if ruleInputs.firstName != "" {
+		if serviceVersion != "" {
+			serviceVersion = "_" + serviceVersion + "-SNAPSHOT"
+		}
 		URL = applicationConfig.NameRuleServerURL + serviceVersion
 		ruleOkay, _ := callDecisionManager(URL, reqBody)
 		results.validFirstName = ruleOkay
