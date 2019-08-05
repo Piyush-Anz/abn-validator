@@ -1,0 +1,245 @@
+{
+	"info": {
+		"_postman_id": "63e35b96-3f98-4c9e-9566-7d50bd978562",
+		"name": "ANZ Decision Manager - Kai Server",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Validate First Name",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "password1!",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "dmadmin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/xml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\t\"lookup\": \"statelessSession\",\n\t\t\"commands\": [\n\t\t  {\n\t\t\t\"set-global\": {\n\t\t\t  \"identifier\": \"service\",\n\t\t\t  \"object\": {\n\t\t\t\t\"com.redhat.demo.abnclient.Client\": {}\n\t\t\t  }\n\t\t\t}\n\t\t  },\n\t\t  {\n\t\t\t\"insert\": {\n\t\t\t  \"object\": {\n\t\t\t\t\"com.myspace.datavalidation.Entity\": {\n\t\t\t\t\t\"name\" : \"Ann-Maree\",\n\t\t\t\t\t\"lastName\" : \"Hicklesmith\",\n\t\t\t\t\t\"abn\" : \"12345\"\n\t\t\t\t}\n\t\t\t  }\n\t\t\t}\n\t\t  },\n\t\t  {\n\t\t\t\"fire-all-rules\": \"\"\n\t\t  },\n\t\t  {\n\t\t\t\"query\": {\n\t\t\t  \"out-identifier\": \"error-results\",\n\t\t\t  \"name\": \"get_validation_error\"\n\t\t\t}\n\t\t  }\n\t\t]\n\t  }"
+				},
+				"url": {
+					"raw": "http://52.64.43.20:8080/kie-server/services/rest/server/containers/instances/validationRulesName",
+					"protocol": "http",
+					"host": [
+						"52",
+						"64",
+						"43",
+						"20"
+					],
+					"port": "8080",
+					"path": [
+						"kie-server",
+						"services",
+						"rest",
+						"server",
+						"containers",
+						"instances",
+						"validationRulesName"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Validate Last Name",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "password1!",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "dmadmin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/xml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\t\"lookup\": \"statelessSession\",\n\t\t\"commands\": [\n\t\t  {\n\t\t\t\"set-global\": {\n\t\t\t  \"identifier\": \"service\",\n\t\t\t  \"object\": {\n\t\t\t\t\"com.redhat.demo.abnclient.Client\": {}\n\t\t\t  }\n\t\t\t}\n\t\t  },\n\t\t  {\n\t\t\t\"insert\": {\n\t\t\t  \"object\": {\n\t\t\t\t\"com.myspace.datavalidation.Entity\": {\n\t\t\t\t\t\"name\" : \"Ann-Maree\",\n\t\t\t\t\t\"lastName\" : \"Hicklesmith\",\n\t\t\t\t\t\"abn\" : \"12345\"\n\t\t\t\t}\n\t\t\t  }\n\t\t\t}\n\t\t  },\n\t\t  {\n\t\t\t\"fire-all-rules\": \"\"\n\t\t  },\n\t\t  {\n\t\t\t\"query\": {\n\t\t\t  \"out-identifier\": \"error-results\",\n\t\t\t  \"name\": \"get_validation_error\"\n\t\t\t}\n\t\t  }\n\t\t]\n\t  }"
+				},
+				"url": {
+					"raw": "http://52.64.43.20:8080/kie-server/services/rest/server/containers/instances/validationRulesName",
+					"protocol": "http",
+					"host": [
+						"52",
+						"64",
+						"43",
+						"20"
+					],
+					"port": "8080",
+					"path": [
+						"kie-server",
+						"services",
+						"rest",
+						"server",
+						"containers",
+						"instances",
+						"validationRulesName"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Validate ABN",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "password1!",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "dmadmin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/xml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\t\"lookup\": \"statelessSession\",\n\t\t\"commands\": [\n\t\t  {\n\t\t\t\"set-global\": {\n\t\t\t  \"identifier\": \"service\",\n\t\t\t  \"object\": {\n\t\t\t\t\"com.redhat.demo.abnclient.Client\": {}\n\t\t\t  }\n\t\t\t}\n\t\t  },\n\t\t  {\n\t\t\t\"insert\": {\n\t\t\t  \"object\": {\n\t\t\t\t\"com.myspace.datavalidation.Entity\": {\n\t\t\t\t\t\"name\" : \"Ann-Maree\",\n\t\t\t\t\t\"lastName\" : \"Hicklesmith\",\n\t\t\t\t\t\"abn\" : \"35090438485\"\n\t\t\t\t}\n\t\t\t  }\n\t\t\t}\n\t\t  },\n\t\t  {\n\t\t\t\"fire-all-rules\": \"\"\n\t\t  },\n\t\t  {\n\t\t\t\"query\": {\n\t\t\t  \"out-identifier\": \"error-results\",\n\t\t\t  \"name\": \"get_validation_error\"\n\t\t\t}\n\t\t  }\n\t\t]\n\t  }"
+				},
+				"url": {
+					"raw": "http://52.64.43.20:8080/kie-server/services/rest/server/containers/instances/validationRulesABN",
+					"protocol": "http",
+					"host": [
+						"52",
+						"64",
+						"43",
+						"20"
+					],
+					"port": "8080",
+					"path": [
+						"kie-server",
+						"services",
+						"rest",
+						"server",
+						"containers",
+						"instances",
+						"validationRulesABN"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Validate First Name - Invalid name",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "password1!",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "dmadmin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/xml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\t\"lookup\": \"statelessSession\",\n\t\t\"commands\": [\n\t\t  {\n\t\t\t\"set-global\": {\n\t\t\t  \"identifier\": \"service\",\n\t\t\t  \"object\": {\n\t\t\t\t\"com.redhat.demo.abnclient.Client\": {}\n\t\t\t  }\n\t\t\t}\n\t\t  },\n\t\t  {\n\t\t\t\"insert\": {\n\t\t\t  \"object\": {\n\t\t\t\t\"com.myspace.datavalidation.Entity\": {\n\t\t\t\t\t\"name\" : \"Ann-Mar^*(ee\",\n\t\t\t\t\t\"lastName\" : \"Hicklesmith\",\n\t\t\t\t\t\"abn\" : \"12345\"\n\t\t\t\t}\n\t\t\t  }\n\t\t\t}\n\t\t  },\n\t\t  {\n\t\t\t\"fire-all-rules\": \"\"\n\t\t  },\n\t\t  {\n\t\t\t\"query\": {\n\t\t\t  \"out-identifier\": \"error-results\",\n\t\t\t  \"name\": \"get_validation_error\"\n\t\t\t}\n\t\t  }\n\t\t]\n\t  }"
+				},
+				"url": {
+					"raw": "http://52.64.43.20:8080/kie-server/services/rest/server/containers/instances/validationRulesName",
+					"protocol": "http",
+					"host": [
+						"52",
+						"64",
+						"43",
+						"20"
+					],
+					"port": "8080",
+					"path": [
+						"kie-server",
+						"services",
+						"rest",
+						"server",
+						"containers",
+						"instances",
+						"validationRulesName"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

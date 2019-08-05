@@ -1,0 +1,77 @@
+{
+	"info": {
+		"_postman_id": "5adc2599-c47a-4787-b847-069e117ef5e0",
+		"name": "ANX Decision Manager Form Simulator",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Healthz test GET",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:80/alivez",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "80",
+					"path": [
+						"alivez"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Healthz test POST",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:80/alivez",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "80",
+					"path": [
+						"alivez"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Form Test",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"firstName\":\"Bryon\",\n\t\"lastName\":\"Baker\",\n\t\"abn\":\"35090438485\",\n\t\"version\",\"0.1\"\n}\n"
+				},
+				"url": {
+					"raw": "http://localhost:10000/form",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "10000",
+					"path": [
+						"form"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
